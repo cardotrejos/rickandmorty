@@ -1,25 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment,useState,useEffect } from "react";
+import Card from './Card';
+import axios from 'axios';
+import "./App.css";
 
 function App() {
+  
+  const [data, setData] =  useState({characters:[]})
+
+  useEffect(() => {
+	const fetchCharacters = async () =>{
+		const response  =  await axios.get('https://rickandmortyapi.com/api/character/')
+		const {results} =  response.data
+		setData({characters:results});
+	}
+    fetchCharacters();
+
+  },[])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
+    <Fragment>
+      <nav className="navbar navbar-expand-lg navbar-dark bg-info">
+        <a className="navbar-brand" href="/">
+          Rick & Morty App
         </a>
-      </header>
-    </div>
+      </nav>
+      <section className="container my-4">
+        <div className="row my-4">
+        {
+          data.characters.map((character,index) => (
+              <Card character={character} key={index}/>
+          ))
+        }
+  
+        </div>
+      </section>
+    </Fragment>
   );
 }
 
